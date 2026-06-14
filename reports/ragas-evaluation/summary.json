@@ -1,0 +1,108 @@
+{
+  "total_cases": 64,
+  "metric_means": {
+    "latency_ms": 36.3059,
+    "response_time_seconds": 0.0363,
+    "status_code": 200.0,
+    "input_tokens_estimated": 30.3125,
+    "output_tokens_estimated": 19.7031,
+    "total_tokens_estimated": 50.0156,
+    "cost_estimated": 0.0,
+    "retrieval_success_rate": 0.9844,
+    "context_utilization_custom": 0.0328,
+    "response_accuracy_custom": 0.0497,
+    "hallucination_detected_custom": 0.8594
+  },
+  "by_sheet": [
+    {
+      "sheet": "10_APIvsUI",
+      "cases": 6,
+      "avg_latency_ms": 25.0317,
+      "retrieval_success_rate": 0.8333,
+      "response_accuracy_custom": 0.0333,
+      "hallucination_rate": 0.6667
+    },
+    {
+      "sheet": "1_HappyPath",
+      "cases": 8,
+      "avg_latency_ms": 78.7862,
+      "retrieval_success_rate": 1.0,
+      "response_accuracy_custom": 0.125,
+      "hallucination_rate": 0.75
+    },
+    {
+      "sheet": "2_Lifecycle",
+      "cases": 7,
+      "avg_latency_ms": 36.6771,
+      "retrieval_success_rate": 1.0,
+      "response_accuracy_custom": 0.0,
+      "hallucination_rate": 1.0
+    },
+    {
+      "sheet": "3_RoleBoundary",
+      "cases": 7,
+      "avg_latency_ms": 43.5286,
+      "retrieval_success_rate": 1.0,
+      "response_accuracy_custom": 0.0,
+      "hallucination_rate": 1.0
+    },
+    {
+      "sheet": "4_RegionBoundary",
+      "cases": 6,
+      "avg_latency_ms": 28.2667,
+      "retrieval_success_rate": 1.0,
+      "response_accuracy_custom": 0.0556,
+      "hallucination_rate": 0.8333
+    },
+    {
+      "sheet": "5_Citation",
+      "cases": 7,
+      "avg_latency_ms": 26.7843,
+      "retrieval_success_rate": 1.0,
+      "response_accuracy_custom": 0.0714,
+      "hallucination_rate": 0.7143
+    },
+    {
+      "sheet": "6_Hallucination",
+      "cases": 7,
+      "avg_latency_ms": 27.5514,
+      "retrieval_success_rate": 1.0,
+      "response_accuracy_custom": 0.1286,
+      "hallucination_rate": 1.0
+    },
+    {
+      "sheet": "7_Security",
+      "cases": 8,
+      "avg_latency_ms": 28.4688,
+      "retrieval_success_rate": 1.0,
+      "response_accuracy_custom": 0.0,
+      "hallucination_rate": 0.875
+    },
+    {
+      "sheet": "8_EdgeCases",
+      "cases": 8,
+      "avg_latency_ms": 25.495,
+      "retrieval_success_rate": 1.0,
+      "response_accuracy_custom": 0.0312,
+      "hallucination_rate": 0.875
+    }
+  ],
+  "ragas": {
+    "enabled": false,
+    "metrics_requested": [
+      "context_precision",
+      "context_recall",
+      "context_entities_recall",
+      "noise_sensitivity",
+      "response_relevancy",
+      "faithfulness",
+      "answer_correctness",
+      "semantic_similarity",
+      "factual_correctness",
+      "answer_accuracy",
+      "context_relevance",
+      "response_groundedness"
+    ],
+    "skip_reason": "RAGAS metrics disabled by configuration."
+  }
+}

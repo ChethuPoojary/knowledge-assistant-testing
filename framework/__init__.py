@@ -1,0 +1,2 @@
+"""Knowledge Assistant automation framework."""
+

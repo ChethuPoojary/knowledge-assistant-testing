@@ -1,0 +1,56 @@
+{
+  "total_cases": 69,
+  "sheet_counts": {
+    "1_HappyPath": 8,
+    "2_Lifecycle": 7,
+    "3_RoleBoundary": 7,
+    "4_RegionBoundary": 6,
+    "5_Citation": 7,
+    "6_Hallucination": 7,
+    "7_Security": 8,
+    "8_EdgeCases": 8,
+    "9_CrossRegion": 5,
+    "10_APIvsUI": 6
+  },
+  "layer_counts": {
+    "Both": 45,
+    "API": 24
+  },
+  "findings": [
+    {
+      "severity": "Medium",
+      "type": "Specification gap",
+      "sheet": "9_CrossRegion",
+      "test_case_id": "TC-CR-001",
+      "detail": "Expected behavior asks to document actual behavior rather than assert a product rule."
+    },
+    {
+      "severity": "Medium",
+      "type": "Specification gap",
+      "sheet": "9_CrossRegion",
+      "test_case_id": "TC-CR-002",
+      "detail": "Expected behavior asks to document actual behavior rather than assert a product rule."
+    },
+    {
+      "severity": "Medium",
+      "type": "Specification gap",
+      "sheet": "9_CrossRegion",
+      "test_case_id": "TC-CR-003",
+      "detail": "Expected behavior asks to document actual behavior rather than assert a product rule."
+    },
+    {
+      "severity": "Medium",
+      "type": "Specification gap",
+      "sheet": "9_CrossRegion",
+      "test_case_id": "TC-CR-004",
+      "detail": "Expected behavior asks to document actual behavior rather than assert a product rule."
+    },
+    {
+      "severity": "Medium",
+      "type": "Specification gap",
+      "sheet": "9_CrossRegion",
+      "test_case_id": "TC-CR-005",
+      "detail": "Expected behavior asks to document actual behavior rather than assert a product rule."
+    }
+  ]
+}

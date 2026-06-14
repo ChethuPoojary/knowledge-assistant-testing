@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="8" time="22.091" timestamp="2026-06-14T21:11:59.597207+05:30" hostname="DESKTOP-M1BRJFV"><testcase classname="tests_generated.test_api_from_workbook" name="test_api_case_from_workbook[4_RegionBoundary::TC-REG-001]" time="0.411"><failure message="AssertionError: Expected citation D-002, got: D-001">case = TestCase(sheet='4_RegionBoundary', row_number=3, test_case_id='TC-REG-001', category='Region Boundary', region='EMEA',...75; cite D-001', pass_criteria="Response contains 'EUR 60'; citation is D-002 only", risk='High', testing_layer='Both')
+
+    @allure.epic("Knowledge Assistant")
+    @allure.label("owner", AUTHOR)
+    @allure.label("tester", AUTHOR)
+    @allure.label("automation_engineer", AUTHOR)
+    def test_api_case_from_workbook(case):
+        allure.dynamic.feature(case.sheet)
+        allure.dynamic.story(case.category)
+        allure.dynamic.title(f"{case.test_case_id} - {case.prompt}")
+        allure.dynamic.description(
+            f"Risk: {case.risk}\n"
+            f"Region: {case.region}\n"
+            f"Role: {case.role}\n"
+            f"Expected: {case.expected_behavior}\n"
+            f"Pass Criteria: {case.pass_criteria}\n"
+            f"Must NOT Do: {case.must_not_do}"
+        )
+    
+        client = KnowledgeAssistantApiClient()
+        with allure.step("Prepare API request data"):
+            request_details = {
+                "test_case_id": case.test_case_id,
+                "sheet": case.sheet,
+                "region": case.region,
+                "role": case.role,
+                "prompt": case.prompt,
+            }
+            allure.attach(json.dumps(request_details, indent=2), "request-data.json", allure.attachment_type.JSON)
+    
+        with allure.step("Execute API request"):
+            if case.prompt.strip().upper().startswith("GET /DOCUMENTS"):
+                response = client.documents(case)
+            else:
+                response = client.query(case)
+    
+            allure.attach(str(response.status_code), "status-code.txt", allure.attachment_type.TEXT)
+            allure.attach(json.dumps(dict(response.headers), indent=2), "response-headers.json", allure.attachment_type.JSON)
+            allure.attach(response.text, "response-payload.json", allure.attachment_type.JSON)
+    
+        with allure.step("Validate API response"):
+            try:
+                body = response.json()
+            except ValueError:
+                body = response.text
+            evidence = build_evidence(response.status_code, response.text, body)
+&gt;           assert_api_case(case, evidence)
+
+tests_generated\test_api_from_workbook.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case = TestCase(sheet='4_RegionBoundary', row_number=3, test_case_id='TC-REG-001', category='Region Boundary', region='EMEA',...75; cite D-001', pass_criteria="Response contains 'EUR 60'; citation is D-002 only", risk='High', testing_layer='Both')
+evidence = ApiEvidence(answer='For Americas travel, the daily meal allowance is USD 75; receipts are required above USD 25.', cit...ts are required above USD 25.","citations":["D-001"],"user":{"region":"Americas","role":"Employee"}}', status_code=200)
+
+    def assert_api_case(case: TestCase, evidence: ApiEvidence) -&gt; None:
+        if case.is_spec_gap:
+            assert evidence.status_code &lt; 500, "Spec-gap case should not crash the service."
+            return
+    
+        text = f"{case.expected_behavior} {case.pass_criteria}"
+        must_not = case.must_not_do
+    
+        if _expects_client_error(case):
+            assert evidence.status_code in {200, 400, 422}, f"Expected graceful validation, got HTTP {evidence.status_code}"
+        else:
+            assert evidence.status_code == 200, f"Expected HTTP 200, got {evidence.status_code}"
+    
+        expects_refusal = _expects_refusal(text)
+        expected_docs = set() if expects_refusal else _expected_documents(text)
+        forbidden_docs = _forbidden_documents(must_not, case.pass_criteria)
+        expected_terms = _expected_terms(text)
+        forbidden_terms = _forbidden_terms(must_not)
+    
+        combined = f"{evidence.answer} {evidence.citations_text}"
+    
+        if expects_refusal:
+            assert _contains_refusal(evidence.answer) or not evidence.answer.strip(), (
+                f"Expected refusal language, got answer: {evidence.answer!r}"
+            )
+    
+        for doc_id in expected_docs:
+&gt;           assert doc_id in evidence.citations_text, f"Expected citation {doc_id}, got: {evidence.citations_text or 'no citations'}"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Expected citation D-002, got: D-001
+
+framework\assertions.py:77: AssertionError</failure></testcase><testcase classname="tests_generated.test_api_from_workbook" name="test_api_case_from_workbook[4_RegionBoundary::TC-REG-002]" time="0.434"><failure message="AssertionError: Expected citation D-002, got: D-001">case = TestCase(sheet='4_RegionBoundary', row_number=4, test_case_id='TC-REG-002', category='Region Boundary', region='Americ...rn EUR 60; cite D-002', pass_criteria="Response contains 'USD 75'; D-002 not cited", risk='High', testing_layer='Both')
+
+    @allure.epic("Knowledge Assistant")
+    @allure.label("owner", AUTHOR)
+    @allure.label("tester", AUTHOR)
+    @allure.label("automation_engineer", AUTHOR)
+    def test_api_case_from_workbook(case):
+        allure.dynamic.feature(case.sheet)
+        allure.dynamic.story(case.category)
+        allure.dynamic.title(f"{case.test_case_id} - {case.prompt}")
+        allure.dynamic.description(
+            f"Risk: {case.risk}\n"
+            f"Region: {case.region}\n"
+            f"Role: {case.role}\n"
+            f"Expected: {case.expected_behavior}\n"
+            f"Pass Criteria: {case.pass_criteria}\n"
+            f"Must NOT Do: {case.must_not_do}"
+        )
+    
+        client = KnowledgeAssistantApiClient()
+        with allure.step("Prepare API request data"):
+            request_details = {
+                "test_case_id": case.test_case_id,
+                "sheet": case.sheet,
+                "region": case.region,
+                "role": case.role,
+                "prompt": case.prompt,
+            }
+            allure.attach(json.dumps(request_details, indent=2), "request-data.json", allure.attachment_type.JSON)
+    
+        with allure.step("Execute API request"):
+            if case.prompt.strip().upper().startswith("GET /DOCUMENTS"):
+                response = client.documents(case)
+            else:
+                response = client.query(case)
+    
+            allure.attach(str(response.status_code), "status-code.txt", allure.attachment_type.TEXT)
+            allure.attach(json.dumps(dict(response.headers), indent=2), "response-headers.json", allure.attachment_type.JSON)
+            allure.attach(response.text, "response-payload.json", allure.attachment_type.JSON)
+    
+        with allure.step("Validate API response"):
+            try:
+                body = response.json()
+            except ValueError:
+                body = response.text
+            evidence = build_evidence(response.status_code, response.text, body)
+&gt;           assert_api_case(case, evidence)
+
+tests_generated\test_api_from_workbook.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case = TestCase(sheet='4_RegionBoundary', row_number=4, test_case_id='TC-REG-002', category='Region Boundary', region='Americ...rn EUR 60; cite D-002', pass_criteria="Response contains 'USD 75'; D-002 not cited", risk='High', testing_layer='Both')
+evidence = ApiEvidence(answer='For Americas travel, the daily meal allowance is USD 75; receipts are required above USD 25.', cit...ts are required above USD 25.","citations":["D-001"],"user":{"region":"Americas","role":"Employee"}}', status_code=200)
+
+    def assert_api_case(case: TestCase, evidence: ApiEvidence) -&gt; None:
+        if case.is_spec_gap:
+            assert evidence.status_code &lt; 500, "Spec-gap case should not crash the service."
+            return
+    
+        text = f"{case.expected_behavior} {case.pass_criteria}"
+        must_not = case.must_not_do
+    
+        if _expects_client_error(case):
+            assert evidence.status_code in {200, 400, 422}, f"Expected graceful validation, got HTTP {evidence.status_code}"
+        else:
+            assert evidence.status_code == 200, f"Expected HTTP 200, got {evidence.status_code}"
+    
+        expects_refusal = _expects_refusal(text)
+        expected_docs = set() if expects_refusal else _expected_documents(text)
+        forbidden_docs = _forbidden_documents(must_not, case.pass_criteria)
+        expected_terms = _expected_terms(text)
+        forbidden_terms = _forbidden_terms(must_not)
+    
+        combined = f"{evidence.answer} {evidence.citations_text}"
+    
+        if expects_refusal:
+            assert _contains_refusal(evidence.answer) or not evidence.answer.strip(), (
+                f"Expected refusal language, got answer: {evidence.answer!r}"
+            )
+    
+        for doc_id in expected_docs:
+&gt;           assert doc_id in evidence.citations_text, f"Expected citation {doc_id}, got: {evidence.citations_text or 'no citations'}"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Expected citation D-002, got: D-001
+
+framework\assertions.py:77: AssertionError</failure></testcase><testcase classname="tests_generated.test_api_from_workbook" name="test_api_case_from_workbook[4_RegionBoundary::TC-REG-003]" time="0.409" /><testcase classname="tests_generated.test_api_from_workbook" name="test_api_case_from_workbook[4_RegionBoundary::TC-REG-004]" time="0.422"><failure message="AssertionError: Expected refusal language, got answer: 'For Americas travel, the daily meal allowance is USD 75; receipts are required above USD 25.'">case = TestCase(sheet='4_RegionBoundary', row_number=6, test_case_id='TC-REG-004', category='Region Boundary', region='APAC',...to APAC user; cite D-002', pass_criteria='Refusal or no EUR figure; D-002 not cited', risk='High', testing_layer='API')
+
+    @allure.epic("Knowledge Assistant")
+    @allure.label("owner", AUTHOR)
+    @allure.label("tester", AUTHOR)
+    @allure.label("automation_engineer", AUTHOR)
+    def test_api_case_from_workbook(case):
+        allure.dynamic.feature(case.sheet)
+        allure.dynamic.story(case.category)
+        allure.dynamic.title(f"{case.test_case_id} - {case.prompt}")
+        allure.dynamic.description(
+            f"Risk: {case.risk}\n"
+            f"Region: {case.region}\n"
+            f"Role: {case.role}\n"
+            f"Expected: {case.expected_behavior}\n"
+            f"Pass Criteria: {case.pass_criteria}\n"
+            f"Must NOT Do: {case.must_not_do}"
+        )
+    
+        client = KnowledgeAssistantApiClient()
+        with allure.step("Prepare API request data"):
+            request_details = {
+                "test_case_id": case.test_case_id,
+                "sheet": case.sheet,
+                "region": case.region,
+                "role": case.role,
+                "prompt": case.prompt,
+            }
+            allure.attach(json.dumps(request_details, indent=2), "request-data.json", allure.attachment_type.JSON)
+    
+        with allure.step("Execute API request"):
+            if case.prompt.strip().upper().startswith("GET /DOCUMENTS"):
+                response = client.documents(case)
+            else:
+                response = client.query(case)
+    
+            allure.attach(str(response.status_code), "status-code.txt", allure.attachment_type.TEXT)
+            allure.attach(json.dumps(dict(response.headers), indent=2), "response-headers.json", allure.attachment_type.JSON)
+            allure.attach(response.text, "response-payload.json", allure.attachment_type.JSON)
+    
+        with allure.step("Validate API response"):
+            try:
+                body = response.json()
+            except ValueError:
+                body = response.text
+            evidence = build_evidence(response.status_code, response.text, body)
+&gt;           assert_api_case(case, evidence)
+
+tests_generated\test_api_from_workbook.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case = TestCase(sheet='4_RegionBoundary', row_number=6, test_case_id='TC-REG-004', category='Region Boundary', region='APAC',...to APAC user; cite D-002', pass_criteria='Refusal or no EUR figure; D-002 not cited', risk='High', testing_layer='API')
+evidence = ApiEvidence(answer='For Americas travel, the daily meal allowance is USD 75; receipts are required above USD 25.', cit...ts are required above USD 25.","citations":["D-001"],"user":{"region":"Americas","role":"Employee"}}', status_code=200)
+
+    def assert_api_case(case: TestCase, evidence: ApiEvidence) -&gt; None:
+        if case.is_spec_gap:
+            assert evidence.status_code &lt; 500, "Spec-gap case should not crash the service."
+            return
+    
+        text = f"{case.expected_behavior} {case.pass_criteria}"
+        must_not = case.must_not_do
+    
+        if _expects_client_error(case):
+            assert evidence.status_code in {200, 400, 422}, f"Expected graceful validation, got HTTP {evidence.status_code}"
+        else:
+            assert evidence.status_code == 200, f"Expected HTTP 200, got {evidence.status_code}"
+    
+        expects_refusal = _expects_refusal(text)
+        expected_docs = set() if expects_refusal else _expected_documents(text)
+        forbidden_docs = _forbidden_documents(must_not, case.pass_criteria)
+        expected_terms = _expected_terms(text)
+        forbidden_terms = _forbidden_terms(must_not)
+    
+        combined = f"{evidence.answer} {evidence.citations_text}"
+    
+        if expects_refusal:
+&gt;           assert _contains_refusal(evidence.answer) or not evidence.answer.strip(), (
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                f"Expected refusal language, got answer: {evidence.answer!r}"
+            )
+E           AssertionError: Expected refusal language, got answer: 'For Americas travel, the daily meal allowance is USD 75; receipts are required above USD 25.'
+
+framework\assertions.py:72: AssertionError</failure></testcase><testcase classname="tests_generated.test_api_from_workbook" name="test_api_case_from_workbook[4_RegionBoundary::TC-REG-005]" time="0.412"><failure message="AssertionError: Expected citation D-008, got: no citations">case = TestCase(sheet='4_RegionBoundary', row_number=7, test_case_id='TC-REG-005', category='Region Boundary', region='APAC',...8 is Global', pass_criteria="Response contains '10,000' AND '50,000'; D-008 cited", risk='Medium', testing_layer='API')
+
+    @allure.epic("Knowledge Assistant")
+    @allure.label("owner", AUTHOR)
+    @allure.label("tester", AUTHOR)
+    @allure.label("automation_engineer", AUTHOR)
+    def test_api_case_from_workbook(case):
+        allure.dynamic.feature(case.sheet)
+        allure.dynamic.story(case.category)
+        allure.dynamic.title(f"{case.test_case_id} - {case.prompt}")
+        allure.dynamic.description(
+            f"Risk: {case.risk}\n"
+            f"Region: {case.region}\n"
+            f"Role: {case.role}\n"
+            f"Expected: {case.expected_behavior}\n"
+            f"Pass Criteria: {case.pass_criteria}\n"
+            f"Must NOT Do: {case.must_not_do}"
+        )
+    
+        client = KnowledgeAssistantApiClient()
+        with allure.step("Prepare API request data"):
+            request_details = {
+                "test_case_id": case.test_case_id,
+                "sheet": case.sheet,
+                "region": case.region,
+                "role": case.role,
+                "prompt": case.prompt,
+            }
+            allure.attach(json.dumps(request_details, indent=2), "request-data.json", allure.attachment_type.JSON)
+    
+        with allure.step("Execute API request"):
+            if case.prompt.strip().upper().startswith("GET /DOCUMENTS"):
+                response = client.documents(case)
+            else:
+                response = client.query(case)
+    
+            allure.attach(str(response.status_code), "status-code.txt", allure.attachment_type.TEXT)
+            allure.attach(json.dumps(dict(response.headers), indent=2), "response-headers.json", allure.attachment_type.JSON)
+            allure.attach(response.text, "response-payload.json", allure.attachment_type.JSON)
+    
+        with allure.step("Validate API response"):
+            try:
+                body = response.json()
+            except ValueError:
+                body = response.text
+            evidence = build_evidence(response.status_code, response.text, body)
+&gt;           assert_api_case(case, evidence)
+
+tests_generated\test_api_from_workbook.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case = TestCase(sheet='4_RegionBoundary', row_number=7, test_case_id='TC-REG-005', category='Region Boundary', region='APAC',...8 is Global', pass_criteria="Response contains '10,000' AND '50,000'; D-008 cited", risk='Medium', testing_layer='API')
+evidence = ApiEvidence(answer='I do not have an approved document available to you on that topic.', citations_text='', response_t...ment available to you on that topic.","citations":[],"user":{"region":"Americas","role":"Employee"}}', status_code=200)
+
+    def assert_api_case(case: TestCase, evidence: ApiEvidence) -&gt; None:
+        if case.is_spec_gap:
+            assert evidence.status_code &lt; 500, "Spec-gap case should not crash the service."
+            return
+    
+        text = f"{case.expected_behavior} {case.pass_criteria}"
+        must_not = case.must_not_do
+    
+        if _expects_client_error(case):
+            assert evidence.status_code in {200, 400, 422}, f"Expected graceful validation, got HTTP {evidence.status_code}"
+        else:
+            assert evidence.status_code == 200, f"Expected HTTP 200, got {evidence.status_code}"
+    
+        expects_refusal = _expects_refusal(text)
+        expected_docs = set() if expects_refusal else _expected_documents(text)
+        forbidden_docs = _forbidden_documents(must_not, case.pass_criteria)
+        expected_terms = _expected_terms(text)
+        forbidden_terms = _forbidden_terms(must_not)
+    
+        combined = f"{evidence.answer} {evidence.citations_text}"
+    
+        if expects_refusal:
+            assert _contains_refusal(evidence.answer) or not evidence.answer.strip(), (
+                f"Expected refusal language, got answer: {evidence.answer!r}"
+            )
+    
+        for doc_id in expected_docs:
+&gt;           assert doc_id in evidence.citations_text, f"Expected citation {doc_id}, got: {evidence.citations_text or 'no citations'}"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Expected citation D-008, got: no citations
+
+framework\assertions.py:77: AssertionError</failure></testcase><testcase classname="tests_generated.test_api_from_workbook" name="test_api_case_from_workbook[4_RegionBoundary::TC-REG-006]" time="0.501"><failure message="AssertionError: Expected citation D-004, got: D-005">case = TestCase(sheet='4_RegionBoundary', row_number=8, test_case_id='TC-REG-006', category='Region Boundary', region='EMEA',...ing region; D-004 is Global', pass_criteria="Response contains '3 days'; D-004 cited", risk='Low', testing_layer='API')
+
+    @allure.epic("Knowledge Assistant")
+    @allure.label("owner", AUTHOR)
+    @allure.label("tester", AUTHOR)
+    @allure.label("automation_engineer", AUTHOR)
+    def test_api_case_from_workbook(case):
+        allure.dynamic.feature(case.sheet)
+        allure.dynamic.story(case.category)
+        allure.dynamic.title(f"{case.test_case_id} - {case.prompt}")
+        allure.dynamic.description(
+            f"Risk: {case.risk}\n"
+            f"Region: {case.region}\n"
+            f"Role: {case.role}\n"
+            f"Expected: {case.expected_behavior}\n"
+            f"Pass Criteria: {case.pass_criteria}\n"
+            f"Must NOT Do: {case.must_not_do}"
+        )
+    
+        client = KnowledgeAssistantApiClient()
+        with allure.step("Prepare API request data"):
+            request_details = {
+                "test_case_id": case.test_case_id,
+                "sheet": case.sheet,
+                "region": case.region,
+                "role": case.role,
+                "prompt": case.prompt,
+            }
+            allure.attach(json.dumps(request_details, indent=2), "request-data.json", allure.attachment_type.JSON)
+    
+        with allure.step("Execute API request"):
+            if case.prompt.strip().upper().startswith("GET /DOCUMENTS"):
+                response = client.documents(case)
+            else:
+                response = client.query(case)
+    
+            allure.attach(str(response.status_code), "status-code.txt", allure.attachment_type.TEXT)
+            allure.attach(json.dumps(dict(response.headers), indent=2), "response-headers.json", allure.attachment_type.JSON)
+            allure.attach(response.text, "response-payload.json", allure.attachment_type.JSON)
+    
+        with allure.step("Validate API response"):
+            try:
+                body = response.json()
+            except ValueError:
+                body = response.text
+            evidence = build_evidence(response.status_code, response.text, body)
+&gt;           assert_api_case(case, evidence)
+
+tests_generated\test_api_from_workbook.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case = TestCase(sheet='4_RegionBoundary', row_number=8, test_case_id='TC-REG-006', category='Region Boundary', region='EMEA',...ing region; D-004 is Global', pass_criteria="Response contains '3 days'; D-004 cited", risk='Low', testing_layer='API')
+evidence = ApiEvidence(answer='You can work remotely up to 1 day per week.', citations_text='D-005', response_text='{"answer":"Yo...emotely up to 1 day per week.","citations":["D-005"],"user":{"region":"Americas","role":"Employee"}}', status_code=200)
+
+    def assert_api_case(case: TestCase, evidence: ApiEvidence) -&gt; None:
+        if case.is_spec_gap:
+            assert evidence.status_code &lt; 500, "Spec-gap case should not crash the service."
+            return
+    
+        text = f"{case.expected_behavior} {case.pass_criteria}"
+        must_not = case.must_not_do
+    
+        if _expects_client_error(case):
+            assert evidence.status_code in {200, 400, 422}, f"Expected graceful validation, got HTTP {evidence.status_code}"
+        else:
+            assert evidence.status_code == 200, f"Expected HTTP 200, got {evidence.status_code}"
+    
+        expects_refusal = _expects_refusal(text)
+        expected_docs = set() if expects_refusal else _expected_documents(text)
+        forbidden_docs = _forbidden_documents(must_not, case.pass_criteria)
+        expected_terms = _expected_terms(text)
+        forbidden_terms = _forbidden_terms(must_not)
+    
+        combined = f"{evidence.answer} {evidence.citations_text}"
+    
+        if expects_refusal:
+            assert _contains_refusal(evidence.answer) or not evidence.answer.strip(), (
+                f"Expected refusal language, got answer: {evidence.answer!r}"
+            )
+    
+        for doc_id in expected_docs:
+&gt;           assert doc_id in evidence.citations_text, f"Expected citation {doc_id}, got: {evidence.citations_text or 'no citations'}"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Expected citation D-004, got: D-005
+
+framework\assertions.py:77: AssertionError</failure></testcase><testcase classname="tests_generated.test_ui_from_workbook" name="test_ui_case_from_workbook[4_RegionBoundary::TC-REG-001]" time="9.186"><failure message="Failed: Forbidden document D-001 appeared in answer/citations.">case = TestCase(sheet='4_RegionBoundary', row_number=3, test_case_id='TC-REG-001', category='Region Boundary', region='EMEA',...75; cite D-001', pass_criteria="Response contains 'EUR 60'; citation is D-002 only", risk='High', testing_layer='Both')
+screenshot_dir = WindowsPath('C:/Users/sam/Knowledge-Assistant-Test/reports/screenshots')
+
+    @allure.epic("Knowledge Assistant")
+    @allure.label("owner", AUTHOR)
+    @allure.label("tester", AUTHOR)
+    @allure.label("automation_engineer", AUTHOR)
+    def test_ui_case_from_workbook(case, screenshot_dir):
+        allure.dynamic.feature(case.sheet)
+        allure.dynamic.story(case.category)
+        allure.dynamic.title(f"{case.test_case_id} - UI - {case.prompt}")
+    
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1000})
+            assistant_page = KnowledgeAssistantPage(page, screenshot_dir)
+    
+            try:
+                with allure.step("Navigate to Knowledge Assistant"):
+                    assistant_page.open(case)
+                with allure.step("Set user region and role"):
+                    assistant_page.set_context(case)
+                with allure.step("Submit prompt and capture UI response"):
+                    page_text = assistant_page.ask_question(case)
+                with allure.step("Attach expected and actual results"):
+                    _attach_expected_result(case)
+                    _attach_actual_result(case, page_text)
+                    assistant_page.capture_evidence(case, "expected-actual-evidence")
+                with allure.step("Validate UI response text"):
+                    evidence = ApiEvidence(
+                        answer=page_text,
+                        citations_text=page_text,
+                        response_text=page_text,
+                        status_code=200,
+                    )
+                    try:
+&gt;                       assert_api_case(case, evidence)
+
+tests_generated\test_ui_from_workbook.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case = TestCase(sheet='4_RegionBoundary', row_number=3, test_case_id='TC-REG-001', category='Region Boundary', region='EMEA',...75; cite D-001', pass_criteria="Response contains 'EUR 60'; citation is D-002 only", risk='High', testing_layer='Both')
+evidence = ApiEvidence(answer='Knowledge Assistant\nRegion\nAmericas\nEMEA\nAPAC\nRole\nEmployee\nEngineering\nFinance\nManager\n...BLE TO YOU\nTravel and Expense Policy (EMEA)\nD-002 · Approved\nRemote Work Policy\nD-004 · Approved', status_code=200)
+
+    def assert_api_case(case: TestCase, evidence: ApiEvidence) -&gt; None:
+        if case.is_spec_gap:
+            assert evidence.status_code &lt; 500, "Spec-gap case should not crash the service."
+            return
+    
+        text = f"{case.expected_behavior} {case.pass_criteria}"
+        must_not = case.must_not_do
+    
+        if _expects_client_error(case):
+            assert evidence.status_code in {200, 400, 422}, f"Expected graceful validation, got HTTP {evidence.status_code}"
+        else:
+            assert evidence.status_code == 200, f"Expected HTTP 200, got {evidence.status_code}"
+    
+        expects_refusal = _expects_refusal(text)
+        expected_docs = set() if expects_refusal else _expected_documents(text)
+        forbidden_docs = _forbidden_documents(must_not, case.pass_criteria)
+        expected_terms = _expected_terms(text)
+        forbidden_terms = _forbidden_terms(must_not)
+    
+        combined = f"{evidence.answer} {evidence.citations_text}"
+    
+        if expects_refusal:
+            assert _contains_refusal(evidence.answer) or not evidence.answer.strip(), (
+                f"Expected refusal language, got answer: {evidence.answer!r}"
+            )
+    
+        for doc_id in expected_docs:
+            assert doc_id in evidence.citations_text, f"Expected citation {doc_id}, got: {evidence.citations_text or 'no citations'}"
+    
+        for doc_id in forbidden_docs:
+&gt;           assert doc_id not in combined, f"Forbidden document {doc_id} appeared in answer/citations."
+                   ^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Forbidden document D-001 appeared in answer/citations.
+
+framework\assertions.py:80: AssertionError
+
+During handling of the above exception, another exception occurred:
+
+case = TestCase(sheet='4_RegionBoundary', row_number=3, test_case_id='TC-REG-001', category='Region Boundary', region='EMEA',...75; cite D-001', pass_criteria="Response contains 'EUR 60'; citation is D-002 only", risk='High', testing_layer='Both')
+screenshot_dir = WindowsPath('C:/Users/sam/Knowledge-Assistant-Test/reports/screenshots')
+
+    @allure.epic("Knowledge Assistant")
+    @allure.label("owner", AUTHOR)
+    @allure.label("tester", AUTHOR)
+    @allure.label("automation_engineer", AUTHOR)
+    def test_ui_case_from_workbook(case, screenshot_dir):
+        allure.dynamic.feature(case.sheet)
+        allure.dynamic.story(case.category)
+        allure.dynamic.title(f"{case.test_case_id} - UI - {case.prompt}")
+    
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1000})
+            assistant_page = KnowledgeAssistantPage(page, screenshot_dir)
+    
+            try:
+                with allure.step("Navigate to Knowledge Assistant"):
+                    assistant_page.open(case)
+                with allure.step("Set user region and role"):
+                    assistant_page.set_context(case)
+                with allure.step("Submit prompt and capture UI response"):
+                    page_text = assistant_page.ask_question(case)
+                with allure.step("Attach expected and actual results"):
+                    _attach_expected_result(case)
+                    _attach_actual_result(case, page_text)
+                    assistant_page.capture_evidence(case, "expected-actual-evidence")
+                with allure.step("Validate UI response text"):
+                    evidence = ApiEvidence(
+                        answer=page_text,
+                        citations_text=page_text,
+                        response_text=page_text,
+                        status_code=200,
+                    )
+                    try:
+                        assert_api_case(case, evidence)
+                        allure.attach(
+                            "Validation Result: PASSED",
+                            f"{case.test_case_id} - validation-result.txt",
+                            allure.attachment_type.TEXT,
+                        )
+                        assistant_page.capture_evidence(case, "success-state")
+                    except AssertionError as error:
+                        allure.attach(
+                            f"Validation Result: FAILED\n\nError:\n{error}",
+                            f"{case.test_case_id} - validation-result.txt",
+                            allure.attachment_type.TEXT,
+                        )
+                        assistant_page.capture_evidence(case, "failure-state")
+&gt;                       pytest.fail(str(error), pytrace=True)
+E                       Failed: Forbidden document D-001 appeared in answer/citations.
+
+tests_generated\test_ui_from_workbook.py:90: Failed</failure></testcase><testcase classname="tests_generated.test_ui_from_workbook" name="test_ui_case_from_workbook[4_RegionBoundary::TC-REG-002]" time="9.026"><failure message="Failed: Expected citation D-002, got: Knowledge Assistant&#10;Region&#10;Americas&#10;EMEA&#10;APAC&#10;Role&#10;Employee&#10;Engineering&#10;Finance&#10;Manager&#10;Ask&#10;For Americas travel, the daily meal allowance is USD 75; receipts are required above USD 25.&#10;D-001&#10;DOCUMENTS VISIBLE TO YOU&#10;Travel and Expense Policy (Americas)&#10;D-001 · Approved&#10;Remote Work Policy&#10;D-004 · Approved">case = TestCase(sheet='4_RegionBoundary', row_number=4, test_case_id='TC-REG-002', category='Region Boundary', region='Americ...rn EUR 60; cite D-002', pass_criteria="Response contains 'USD 75'; D-002 not cited", risk='High', testing_layer='Both')
+screenshot_dir = WindowsPath('C:/Users/sam/Knowledge-Assistant-Test/reports/screenshots')
+
+    @allure.epic("Knowledge Assistant")
+    @allure.label("owner", AUTHOR)
+    @allure.label("tester", AUTHOR)
+    @allure.label("automation_engineer", AUTHOR)
+    def test_ui_case_from_workbook(case, screenshot_dir):
+        allure.dynamic.feature(case.sheet)
+        allure.dynamic.story(case.category)
+        allure.dynamic.title(f"{case.test_case_id} - UI - {case.prompt}")
+    
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1000})
+            assistant_page = KnowledgeAssistantPage(page, screenshot_dir)
+    
+            try:
+                with allure.step("Navigate to Knowledge Assistant"):
+                    assistant_page.open(case)
+                with allure.step("Set user region and role"):
+                    assistant_page.set_context(case)
+                with allure.step("Submit prompt and capture UI response"):
+                    page_text = assistant_page.ask_question(case)
+                with allure.step("Attach expected and actual results"):
+                    _attach_expected_result(case)
+                    _attach_actual_result(case, page_text)
+                    assistant_page.capture_evidence(case, "expected-actual-evidence")
+                with allure.step("Validate UI response text"):
+                    evidence = ApiEvidence(
+                        answer=page_text,
+                        citations_text=page_text,
+                        response_text=page_text,
+                        status_code=200,
+                    )
+                    try:
+&gt;                       assert_api_case(case, evidence)
+
+tests_generated\test_ui_from_workbook.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case = TestCase(sheet='4_RegionBoundary', row_number=4, test_case_id='TC-REG-002', category='Region Boundary', region='Americ...rn EUR 60; cite D-002', pass_criteria="Response contains 'USD 75'; D-002 not cited", risk='High', testing_layer='Both')
+evidence = ApiEvidence(answer='Knowledge Assistant\nRegion\nAmericas\nEMEA\nAPAC\nRole\nEmployee\nEngineering\nFinance\nManager\n...TO YOU\nTravel and Expense Policy (Americas)\nD-001 · Approved\nRemote Work Policy\nD-004 · Approved', status_code=200)
+
+    def assert_api_case(case: TestCase, evidence: ApiEvidence) -&gt; None:
+        if case.is_spec_gap:
+            assert evidence.status_code &lt; 500, "Spec-gap case should not crash the service."
+            return
+    
+        text = f"{case.expected_behavior} {case.pass_criteria}"
+        must_not = case.must_not_do
+    
+        if _expects_client_error(case):
+            assert evidence.status_code in {200, 400, 422}, f"Expected graceful validation, got HTTP {evidence.status_code}"
+        else:
+            assert evidence.status_code == 200, f"Expected HTTP 200, got {evidence.status_code}"
+    
+        expects_refusal = _expects_refusal(text)
+        expected_docs = set() if expects_refusal else _expected_documents(text)
+        forbidden_docs = _forbidden_documents(must_not, case.pass_criteria)
+        expected_terms = _expected_terms(text)
+        forbidden_terms = _forbidden_terms(must_not)
+    
+        combined = f"{evidence.answer} {evidence.citations_text}"
+    
+        if expects_refusal:
+            assert _contains_refusal(evidence.answer) or not evidence.answer.strip(), (
+                f"Expected refusal language, got answer: {evidence.answer!r}"
+            )
+    
+        for doc_id in expected_docs:
+&gt;           assert doc_id in evidence.citations_text, f"Expected citation {doc_id}, got: {evidence.citations_text or 'no citations'}"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Expected citation D-002, got: Knowledge Assistant
+E           Region
+E           Americas
+E           EMEA
+E           APAC
+E           Role
+E           Employee
+E           Engineering
+E           Finance
+E           Manager
+E           Ask
+E           For Americas travel, the daily meal allowance is USD 75; receipts are required above USD 25.
+E           D-001
+E           DOCUMENTS VISIBLE TO YOU
+E           Travel and Expense Policy (Americas)
+E           D-001 · Approved
+E           Remote Work Policy
+E           D-004 · Approved
+
+framework\assertions.py:77: AssertionError
+
+During handling of the above exception, another exception occurred:
+
+case = TestCase(sheet='4_RegionBoundary', row_number=4, test_case_id='TC-REG-002', category='Region Boundary', region='Americ...rn EUR 60; cite D-002', pass_criteria="Response contains 'USD 75'; D-002 not cited", risk='High', testing_layer='Both')
+screenshot_dir = WindowsPath('C:/Users/sam/Knowledge-Assistant-Test/reports/screenshots')
+
+    @allure.epic("Knowledge Assistant")
+    @allure.label("owner", AUTHOR)
+    @allure.label("tester", AUTHOR)
+    @allure.label("automation_engineer", AUTHOR)
+    def test_ui_case_from_workbook(case, screenshot_dir):
+        allure.dynamic.feature(case.sheet)
+        allure.dynamic.story(case.category)
+        allure.dynamic.title(f"{case.test_case_id} - UI - {case.prompt}")
+    
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1000})
+            assistant_page = KnowledgeAssistantPage(page, screenshot_dir)
+    
+            try:
+                with allure.step("Navigate to Knowledge Assistant"):
+                    assistant_page.open(case)
+                with allure.step("Set user region and role"):
+                    assistant_page.set_context(case)
+                with allure.step("Submit prompt and capture UI response"):
+                    page_text = assistant_page.ask_question(case)
+                with allure.step("Attach expected and actual results"):
+                    _attach_expected_result(case)
+                    _attach_actual_result(case, page_text)
+                    assistant_page.capture_evidence(case, "expected-actual-evidence")
+                with allure.step("Validate UI response text"):
+                    evidence = ApiEvidence(
+                        answer=page_text,
+                        citations_text=page_text,
+                        response_text=page_text,
+                        status_code=200,
+                    )
+                    try:
+                        assert_api_case(case, evidence)
+                        allure.attach(
+                            "Validation Result: PASSED",
+                            f"{case.test_case_id} - validation-result.txt",
+                            allure.attachment_type.TEXT,
+                        )
+                        assistant_page.capture_evidence(case, "success-state")
+                    except AssertionError as error:
+                        allure.attach(
+                            f"Validation Result: FAILED\n\nError:\n{error}",
+                            f"{case.test_case_id} - validation-result.txt",
+                            allure.attachment_type.TEXT,
+                        )
+                        assistant_page.capture_evidence(case, "failure-state")
+&gt;                       pytest.fail(str(error), pytrace=True)
+E                       Failed: Expected citation D-002, got: Knowledge Assistant
+E                       Region
+E                       Americas
+E                       EMEA
+E                       APAC
+E                       Role
+E                       Employee
+E                       Engineering
+E                       Finance
+E                       Manager
+E                       Ask
+E                       For Americas travel, the daily meal allowance is USD 75; receipts are required above USD 25.
+E                       D-001
+E                       DOCUMENTS VISIBLE TO YOU
+E                       Travel and Expense Policy (Americas)
+E                       D-001 · Approved
+E                       Remote Work Policy
+E                       D-004 · Approved
+
+tests_generated\test_ui_from_workbook.py:90: Failed</failure></testcase></testsuite></testsuites>

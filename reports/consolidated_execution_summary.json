@@ -1,0 +1,140 @@
+{
+  "total_sheets_processed": 10,
+  "total_test_cases_per_sheet": {
+    "1_HappyPath": {
+      "cases": 8,
+      "ui": 4,
+      "api": 8,
+      "passed": 3,
+      "failed": 9,
+      "skipped": 0
+    },
+    "2_Lifecycle": {
+      "cases": 7,
+      "ui": 6,
+      "api": 7,
+      "passed": 5,
+      "failed": 8,
+      "skipped": 0
+    },
+    "3_RoleBoundary": {
+      "cases": 7,
+      "ui": 4,
+      "api": 7,
+      "passed": 6,
+      "failed": 5,
+      "skipped": 0
+    },
+    "4_RegionBoundary": {
+      "cases": 6,
+      "ui": 2,
+      "api": 6,
+      "passed": 1,
+      "failed": 7,
+      "skipped": 0
+    },
+    "5_Citation": {
+      "cases": 7,
+      "ui": 3,
+      "api": 7,
+      "passed": 0,
+      "failed": 10,
+      "skipped": 0
+    },
+    "6_Hallucination": {
+      "cases": 7,
+      "ui": 4,
+      "api": 7,
+      "passed": 7,
+      "failed": 4,
+      "skipped": 0
+    },
+    "7_Security": {
+      "cases": 8,
+      "ui": 7,
+      "api": 8,
+      "passed": 7,
+      "failed": 8,
+      "skipped": 0
+    },
+    "8_EdgeCases": {
+      "cases": 8,
+      "ui": 7,
+      "api": 8,
+      "passed": 4,
+      "failed": 11,
+      "skipped": 0
+    },
+    "9_CrossRegion": {
+      "cases": 5,
+      "ui": 5,
+      "api": 5,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0
+    },
+    "10_APIvsUI": {
+      "cases": 6,
+      "ui": 3,
+      "api": 6,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "total_ui_test_cases": 45,
+  "total_api_test_cases": 69,
+  "total_passed": 52,
+  "total_failed": 62,
+  "total_skipped": 0,
+  "coverage_percentage": 100.0,
+  "missing_or_ambiguous_scenarios": [
+    {
+      "severity": "Medium",
+      "type": "Specification gap",
+      "sheet": "9_CrossRegion",
+      "test_case_id": "TC-CR-001",
+      "detail": "Expected behavior asks to document actual behavior rather than assert a product rule."
+    },
+    {
+      "severity": "Medium",
+      "type": "Specification gap",
+      "sheet": "9_CrossRegion",
+      "test_case_id": "TC-CR-002",
+      "detail": "Expected behavior asks to document actual behavior rather than assert a product rule."
+    },
+    {
+      "severity": "Medium",
+      "type": "Specification gap",
+      "sheet": "9_CrossRegion",
+      "test_case_id": "TC-CR-003",
+      "detail": "Expected behavior asks to document actual behavior rather than assert a product rule."
+    },
+    {
+      "severity": "Medium",
+      "type": "Specification gap",
+      "sheet": "9_CrossRegion",
+      "test_case_id": "TC-CR-004",
+      "detail": "Expected behavior asks to document actual behavior rather than assert a product rule."
+    },
+    {
+      "severity": "Medium",
+      "type": "Specification gap",
+      "sheet": "9_CrossRegion",
+      "test_case_id": "TC-CR-005",
+      "detail": "Expected behavior asks to document actual behavior rather than assert a product rule."
+    }
+  ],
+  "recommendations": [
+    "Clarify cross-region home-region versus destination-region policy behavior.",
+    "Define exact refusal wording expectations to reduce brittle assertion logic.",
+    "Add stable data-testid attributes to UI controls for robust automation.",
+    "Document the expected API schema for citations and document filtering.",
+    "Separate exploratory/spec-gap rows from release-gating regression rows."
+  ],
+  "assumptions_risks_blockers": [
+    "UI automation uses resilient label/role-based selectors because no stable data-testid contract is available.",
+    "Spec-gap scenarios are treated as service stability checks and documented behavior rather than strict pass/fail business assertions.",
+    "Live service defects are reported as failed tests and preserved in Allure evidence."
+  ]
+}

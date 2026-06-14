@@ -5,4 +5,16 @@ test-results/
 __pycache__/
 .pytest_cache/
 *.log
+package-lock.json
 
+# Generated raw execution data and caches
+.deepeval/
+**/__pycache__/
+reports/allure-results*/
+reports/screenshots/
+reports/ragas-evaluation-smoke/
+reports/defect-report-ui/
+
+# Keep final reviewer-facing reports, but ignore duplicate/legacy generated folders
+allure-report/
+reports/allure-report-api-single/
