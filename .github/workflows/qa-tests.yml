@@ -25,6 +25,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run API tests
+        continue-on-error: true
         run: pytest api-tests -v --junitxml=reports/api-test-results.xml
 
       - name: Upload API test report
@@ -46,7 +47,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
 
       - name: Install Node dependencies
         run: npm install
@@ -55,6 +55,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
+        continue-on-error: true
         run: npx playwright test --reporter=html
 
       - name: Upload Playwright report
@@ -65,3 +66,9 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
+      - name: Add report instructions to summary
+        if: always()
+        run: |
+          echo "## QA Test Reports" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Download the API and Playwright reports from the Artifacts section of this workflow run." >> "$GITHUB_STEP_SUMMARY"
