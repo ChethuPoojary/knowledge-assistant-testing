@@ -29,22 +29,16 @@ Use this section as the main reviewer/interviewer navigation list.
 | Reflection | `Reflection.md` | `docs/Reflection.md` |
 | Test Plan | `Test_Plan.md` | `docs/Test_Plan.md` |
 | Risk Assessment | `Risk_Assessment.md` | `docs/Risk_Assessment.md` |
-| Requirement Traceability Matrix | `RTM.md` | `docs/RTM.md` |
 | Golden Question Test Suite | `KnowledgeAssistant_TestSuite.xlsx` | `test-suite/KnowledgeAssistant_TestSuite.xlsx` |
 | API Automation Test File | `test_api_from_workbook.py` | `tests_generated/test_api_from_workbook.py` |
 | UI Automation Test File | `test_ui_from_workbook.py` | `tests_generated/test_ui_from_workbook.py` |
-| Pytest Fixtures / Test Data Loader | `conftest.py` | `tests_generated/conftest.py` |
 | API Runner Script | `run_generated_api_allure.ps1` | `run_generated_api_allure.ps1` |
 | UI Runner Script | `run_generated_ui_allure.ps1` | `run_generated_ui_allure.ps1` |
 | Full Workbook Runner Script | `run_workbook_tests_allure.ps1` | `run_workbook_tests_allure.ps1` |
 | API Allure Report | `index.html` | `reports/allure-report-api/index.html` |
 | UI Allure Report | `index.html` | `reports/allure-report-ui/index.html` |
 | Sheet-Level Allure Reports | per-sheet `index.html` files | `reports/allure-reports-by-sheet/` |
-| API JUnit XML Result | `api-results.xml` | `reports/api-results.xml` |
-| UI JUnit XML Result | `ui-results.xml` | `reports/ui-results.xml` |
 | Consolidated Execution Summary | `consolidated_execution_summary.md` | `reports/consolidated_execution_summary.md` |
-| Consolidated Execution Summary JSON | `consolidated_execution_summary.json` | `reports/consolidated_execution_summary.json` |
-| Test Suite Validation Summary | `testsuite_validation_summary.json` | `reports/testsuite_validation_summary.json` |
 | UI Defect Report | `Latest_UI_Defect_Report_Chethan_Poojary.xlsx` | `reports/defect-report/Latest_UI_Defect_Report_Chethan_Poojary.xlsx` |
 | API Defect Report | `Latest_API_Defect_Report_Chethan_Poojary.xlsx` | `reports/defect-report-api/Latest_API_Defect_Report_Chethan_Poojary.xlsx` |
 | Both Execution Defect Report | `Latest_Both_Execution_Defect_Report_Chethan_Poojary.xlsx` | `reports/defect-report-both/Latest_Both_Execution_Defect_Report_Chethan_Poojary.xlsx` |
