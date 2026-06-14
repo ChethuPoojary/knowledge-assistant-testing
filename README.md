@@ -237,3 +237,25 @@ If OpenAI quota is unavailable, RAGAS judge metrics may fail with `429 insuffici
 - Failed API and UI cases are documented in the defect reports.
 - UI failures include screenshot evidence.
 - Reports are regenerated when the corresponding run script is executed.
+
+## Final Note
+
+I have completed the QA assignment deliverables for the Knowledge Assistant application.
+
+Completed items:
+- Designed a golden-question test suite covering happy path, lifecycle rules, region/role access boundaries, citation correctness, hallucination checks, security/prompt injection, edge cases, and API-vs-UI consistency.
+- Implemented API automation using pytest and requests.
+- Implemented UI automation using Playwright with screenshot evidence.
+- Generated Allure reports for API, UI, and sheet-level executions.
+- Created defect reports for API, UI, and combined execution, including expected result, actual result, steps to reproduce, region, role, failure reason, and screenshots for UI failures.
+- Created a final defect summary workbook with duplicate defects removed using Execution Layer + Test Case ID as the unique key.
+- Added an optional RAG evaluation framework using RAGAS/custom metrics for faithfulness, context precision/recall, answer correctness, semantic similarity, groundedness, latency, token usage, cost estimation, retrieval success rate, and hallucination detection.
+
+Known limitations / skipped items:
+- Full load/performance testing was not implemented.
+- Long-term model/output drift monitoring was added only as an optional RAGAS framework, not as a scheduled CI monitor.
+- RAGAS judge metrics require an active OpenAI API key with available quota.
+- Some UI/API failures are expected product defects and are documented in the defect reports.
+
+Reports are available under:
+C:\Users\sam\Knowledge-Assistant-Test\reports
